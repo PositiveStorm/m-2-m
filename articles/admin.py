@@ -12,8 +12,11 @@ class ScopeInlineFormset(BaseInlineFormSet):
         new_list=[]
         for form in self.forms:
             new_list.append((form.cleaned_data.get('is_main')))
-            # raise ValidationError('Тут всегда ошибка')
-        return super().clean()  # вызываем базовый код переопределяемого метода
+            if new_list.count(True) == 0:
+                raise ValidationError('Один раздел должен быть основным!')
+            elif new_list.count(True) > 1:
+                raise ValidationError('Ошибка!')
+        return super().clean()
 
 #
 class ScopeInline(admin.TabularInline):
